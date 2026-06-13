@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Pose With AI v4</title>
+
+<link rel="stylesheet"
+href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>📸 Pose With AI v4</h1>
+
+<p class="subtitle">
+AI Fashion & Posture Coach
+</p>
+
+<div class="camera-container">
+
+<video id="video" autoplay playsinline></video>
+
+<canvas id="canvas"></canvas>
+
+</div>
+
+<div class="controls">
+
+<select id="poseType">
+
+<option value="standing">
+Standing Posture
+</option>
+
+<option value="sitting">
+Sitting Posture
+</option>
+
+<option value="confident">
+Confident Pose
+</option>
+
+<option value="interview">
+Interview Pose
+</option>
+
+<option value="casual">
+Fashion Casual
+</option>
+
+<option value="professional">
+Fashion Professional
+</option>
+
+<option value="traditional">
+Fashion Traditional
+</option>
+
+<option value="trendy">
+Fashion Trendy
+</option>
+
+<option value="social">
+Social Media Pose
+</option>
+
+</select>
+
+<button id="startBtn">
+Start Camera
+</button>
+
+<button id="captureBtn">
+Capture Photo
+</button>
+
+</div>
+
+<div id="countdown">
+</div>
+
+<div class="score-panel">
+
+<h2 id="score">
+Posture Score: 0%
+</h2>
+
+<h3 id="bestScore">
+Best Score: 0%
+</h3>
+
+</div>
+
+<div class="panel">
+
+<h2>
+🤖 AI Recommended Pose
+</h2>
+
+<div id="recommendedPose">
+
+Select a mode...
+
+</div>
+
+</div>
+
+<div class="panel">
+
+<h2>
+🛠 AI Corrections
+</h2>
+
+<div id="tips">
+
+Waiting...
+
+</div>
+
+</div>
+
+<div class="panel">
+
+<h2>
+📷 Pose History
+</h2>
+
+<ul id="historyList">
+
+</ul>
+
+</div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+
+<script src="{{ url_for('static', filename='js/aiSuggestions.js') }}"></script>
+
+<script src="{{ url_for('static', filename='js/poseHistory.js') }}"></script>
+
+<script src="{{ url_for('static', filename='js/capture.js') }}"></script>
+
+<script src="{{ url_for('static', filename='js/pose.js') }}"></script>
+
+</body>
+
+</html>
