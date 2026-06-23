@@ -5,9 +5,15 @@ from dataclasses import dataclass, field
 
 import cv2
 import numpy as np
-import mediapipe as mp
-mp_face = mp.solutions.face_mesh
-mp_pose = mp.solutions.pose
+
+try:
+    import mediapipe as mp
+    mp_face = mp.solutions.face_mesh
+    mp_pose = mp.solutions.pose
+except Exception:
+    mp = None
+    mp_face = None
+    mp_pose = None
 
 MEDIA_PIPE_AVAILABLE = mp_face is not None and mp_pose is not None
 
