@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import './Layout.css';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  const { user, logout } = useAuth();
+  const { user, logout, guestMode } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -19,7 +19,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <Camera size={24} />
           <span>Pose With AI</span>
         </div>
-        <p className="tagline">Dress Smart. Pose Smart. Capture Perfect.</p>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+          <p className="tagline">Dress Smart. Pose Smart. Capture Perfect.</p>
+          {guestMode && <small className="guest-badge">Guest User</small>}
+        </div>
       </header>
 
       <main className="main-content">{children}</main>
@@ -41,7 +44,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <User size={22} />
           <span>Profile</span>
         </NavLink>
-        {user?.is_admin && (
+        {(user?.is_admin || guestMode) && (
           <NavLink to="/admin" className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
             <Shield size={22} />
             <span>Admin</span>

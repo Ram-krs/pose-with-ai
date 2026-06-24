@@ -4,5 +4,17 @@
       "source": "/api/(.*)",
       "destination": "https://pose-with-ai.onrender.com/$1"
     }
-  ]
+  ],
+  "experimentalServices": {
+    "frontend": {
+      "root": "frontend",
+      "routePrefix": "/",
+      "framework": "vite"
+    },
+    "backend": {
+      "root": "backend",
+      "entrypoint": "app.main:app",
+      "routePrefix": "/_/backend"
+    }
+  }
 }

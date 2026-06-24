@@ -33,23 +33,90 @@ export const analysisApi = {
 };
 
 export const photosApi = {
-  capture: (blob: Blob) => {
+  capture: async (blob: Blob) => {
+    const guestMode = localStorage.getItem('guestMode') === 'true';
+    if (guestMode) {
+      // Convert blob to data URL and save locally
+      const toDataURL = (b: Blob) => new Promise<string>((resolve) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(String(reader.result));
+        reader.readAsDataURL(b);
+      });
+      const dataUrl = await toDataURL(blob);
+      const photo: Photo = {
+        id: Date.now(),
+        filename: `guest_${Date.now()}.jpg`,
+        local_path: dataUrl,
+        cloud_url: dataUrl,
+        created_at: new Date().toISOString(),
+      } as unknown as Photo;
+      const existing = JSON.parse(localStorage.getItem('guest_photos') || '[]');
+      existing.unshift(photo);
+      localStorage.setItem('guest_photos', JSON.stringify(existing));
+      return Promise.resolve({ data: photo });
+    }
     const form = new FormData();
     form.append('file', blob, 'capture.jpg');
     return api.post<Photo>('/photos/capture', form);
   },
-  list: () => api.get<Photo[]>('/photos/'),
-  get: (id: number) => api.get<Photo>(`/photos/${id}`),
-  delete: (id: number) => api.delete(`/photos/${id}`),
+  list: () => {
+    const guestMode = localStorage.getItem('guestMode') === 'true';
+    if (guestMode) {
+      const existing = JSON.parse(localStorage.getItem('guest_photos') || '[]');
+      return Promise.resolve({ data: existing });
+    }
+    return api.get<Photo[]>('/photos/');
+  },
+  get: (id: number) => {
+    const guestMode = localStorage.getItem('guestMode') === 'true';
+    if (guestMode) {
+      const existing = JSON.parse(localStorage.getItem('guest_photos') || '[]');
+      const found = existing.find((p: any) => p.id === id);
+      return Promise.resolve({ data: found });
+    }
+    return api.get<Photo>(`/photos/${id}`);
+  },
+  delete: (id: number) => {
+    const guestMode = localStorage.getItem('guestMode') === 'true';
+    if (guestMode) {
+      const existing = JSON.parse(localStorage.getItem('guest_photos') || '[]');
+      const filtered = existing.filter((p: any) => p.id !== id);
+      localStorage.setItem('guest_photos', JSON.stringify(filtered));
+      return Promise.resolve({ data: {} });
+    }
+    return api.delete(`/photos/${id}`);
+  },
 };
 
 export const historyApi = {
-  list: () => api.get<PoseHistoryItem[]>('/history/'),
+  list: () => {
+    const guestMode = localStorage.getItem('guestMode') === 'true';
+    if (guestMode) {
+      const existing = JSON.parse(localStorage.getItem('guest_history') || '[]');
+      return Promise.resolve({ data: existing });
+    }
+    return api.get<PoseHistoryItem[]>('/history/');
+  },
 };
 
 export const adminApi = {
-  stats: () => api.get<AdminStats>('/admin/stats'),
-  users: () => api.get<User[]>('/admin/users'),
+  stats: () => {
+    const guestMode = localStorage.getItem('guestMode') === 'true';
+    if (guestMode) {
+      const mock: AdminStats = { total_users: 1, active_users: 1, total_photos: 0, total_analyses: 0, avg_pose_score: 0, avg_overall_score: 0 };
+      return Promise.resolve({ data: mock });
+    }
+    return api.get<AdminStats>('/admin/stats');
+  },
+  users: () => {
+    const guestMode = localStorage.getItem('guestMode') === 'true';
+    if (guestMode) {
+      const guest = JSON.parse(localStorage.getItem('guestUser') || 'null');
+      const arr = guest ? [guest] : [];
+      return Promise.resolve({ data: arr });
+    }
+    return api.get<User[]>('/admin/users');
+  },
   toggleActive: (id: number) => api.patch(`/admin/users/${id}/toggle-active`),
 };
 

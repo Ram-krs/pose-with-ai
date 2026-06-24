@@ -11,7 +11,7 @@ export default function RegisterPage() {
   const [confirm, setConfirm] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { register } = useAuth();
+  const { register, continueAsGuest } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -64,6 +64,16 @@ export default function RegisterPage() {
             {loading ? 'Creating...' : 'Register'}
           </button>
         </form>
+
+        <button
+          className="btn btn-secondary auth-btn"
+          onClick={() => {
+            continueAsGuest();
+            navigate('/camera');
+          }}
+        >
+          Continue Without Login
+        </button>
 
         <div className="auth-links">
           <Link to="/login">Already have an account? Sign In</Link>

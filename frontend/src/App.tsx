@@ -11,9 +11,9 @@ import ProfilePage from './pages/ProfilePage';
 import AdminPage from './pages/AdminPage';
 
 function HomeRedirect() {
-  const { user, loading } = useAuth();
+  const { user, loading, guestMode } = useAuth();
   if (loading) return <div className="loading-spinner">Loading...</div>;
-  return <Navigate to={user ? '/camera' : '/login'} replace />;
+  return <Navigate to={user || guestMode ? '/camera' : '/login'} replace />;
 }
 
 export default function App() {

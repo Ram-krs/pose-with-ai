@@ -9,7 +9,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { login } = useAuth();
+  const { login, continueAsGuest } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -60,6 +60,16 @@ export default function LoginPage() {
             {loading ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
+
+        <button
+          className="btn btn-secondary auth-btn"
+          onClick={() => {
+            continueAsGuest();
+            navigate('/camera');
+          }}
+        >
+          Continue Without Login
+        </button>
 
         <div className="auth-links">
           <Link to="/forgot-password">Forgot Password?</Link>
